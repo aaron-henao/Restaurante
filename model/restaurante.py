@@ -33,7 +33,21 @@ class Horarios:
         self.horas: int = horas
 
     def semana(self,dias_semana):
-        self.dias_semana: list= ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
+        self.dias_semana: list = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
+
+    def horario_restaurante(self, horario_servicio:list, horario_almuerzo: tuple, horario_tarde: tuple, horario_cena: tuple):
+        self.horario_servicio: dict = {
+            'lunes': (11, 22),
+            'martes': (11, 22),
+            'miércoles': (11, 22),
+            'jueves': (11, 22),
+            'viernes': (11, 23),
+            'sábado': (11, 23),
+            'domingo': (11, 22),
+        }
+        self.horario_almuerzo: tuple = (12,15)
+        self.horario_tarde: tuple = (15,18)
+        self.horario_comida: tuple = (18, 23)
 
     def descanso(self, dias_descanso: str):
         self.dias_descanso: str = dias_descanso
