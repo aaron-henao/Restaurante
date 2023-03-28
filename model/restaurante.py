@@ -32,7 +32,7 @@ class Horarios:
         self.dias_descanso: str = dias_descanso
         self.horas: int = horas
 
-    def semana(self,dias_semana):
+    def semana(self,dias_semana: list):
         self.dias_semana: list = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
 
     def horario_restaurante(self, horario_servicio:list, horario_almuerzo: tuple, horario_tarde: tuple, horario_cena: tuple):
@@ -63,8 +63,14 @@ class Horarios:
                 'correo': f'mesero{i + 1}@restaurante.com'
             })
 
-    def dias_laborales(self, dias_laborados: str):
-        self.dias_laborados: str = dias_laborados
+    def apertura(self):
+        for i in self.dias_semana:
+            mesero_apertura = random.choice(self.meseros)
+            mesero_apertura['horario_semana'][i] = {
+                'inicio': self.horario_servicio[i][0],
+                'fin': self.horario_servicio[i][1],
+                'horas_trabajadas': 0
+            }
 
 
 
