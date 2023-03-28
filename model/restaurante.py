@@ -72,6 +72,10 @@ class Horarios:
                 'horas_trabajadas': 0
             }
 
-
+    def generar_horarios(self):
+        for self.mesero in self.meseros:
+            dias_descanso = self.mesero['dias_descanso']
+            dias_trabajo = [i for i in self.dias_semana if i not in self.dias_descanso]
+            horas_trabajo_semana = 0
 
 
