@@ -7,8 +7,10 @@ class Restaurante:
 
         pass
 
-    def registrar_mesero(self, nombre: str):
+    def registrar_mesero(self, nombre: str, documento: int, meseros: list[tuple]):
         self.nombre: str = nombre
+        self.documento: int = documento
+        self.meseros: list[tuple] = meseros[(self.nombre, self.documento)]
 
 
     def mesero(self, num_meseros: int):
@@ -60,7 +62,7 @@ class Horarios:
                 'horario_semana': {},
                 'horario_diario': {},
                 'horario_descanso': {},
-                'correo': f'mesero{i + 1}@restaurante.com'
+                'correo': f'mesero{  i + 1}@restaurante.com'
             })
 
     def apertura(self):
