@@ -2,6 +2,7 @@ import random
 
 dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
+
 class Mesero:
     def __init__(self, nombre: str, correo: str):
         self.nombre = nombre
@@ -36,7 +37,8 @@ class Restaurante:
                 max_meseros_descanso = 2  # Dos meseros pueden descansar los demás días
 
             meseros_descanso = []
-            meseros_cierre = []  # Meseros asignados al turno "12:00 pm - cierre"
+            meseros_cierre = []  # Meseros asignados al turno "12:00 pm - cierre", aquí aseguramos que el restaurante
+            # no va a estar solo en ningun momento
             turno = random.choice(turnos)
             for mesero in meseros_disponibles:
                 if mesero.dias_descanso < 2 and len(meseros_descanso) < max_meseros_descanso:
@@ -67,7 +69,7 @@ class Restaurante:
                         mesero.horas_trabajadas += horas_turno
                         self.horas_trabajadas += horas_turno
                     else:
-                        horarios[dia].append(mesero.nombre + ": Descanso (Exceso de horas)")
+                        horarios[dia].append(mesero.nombre + ": Descanso (Exceso de horas)") #Se asigna un descanso obligatorio a quien esté apunto de complir las 48 hrs semanales
 
             meseros_disponibles = self.meseros.copy()
 
@@ -78,7 +80,7 @@ class Nomina:
     def __init__(self, meseros):
         self.meseros = meseros
 
-    def calcular_salario(self):
+    def calcular_salario(self): #Calculamos la nómina del mesero, multiplicando las horas trabajadas por el valor de la hora
         valor_hora = 4830
         salarios = {}
         for mesero in self.meseros:
@@ -87,6 +89,7 @@ class Nomina:
         return salarios
 
 
+#Ejemplo implementación
 restaurante = Restaurante()
 
 restaurante.agregar_mesero("Mesero 1", "mesero1@example.com")
@@ -119,4 +122,3 @@ salarios_meseros = nomina.calcular_salario()
 print("Salarios:")
 for mesero, salario in salarios_meseros.items():
     print(f"{mesero}: ${salario}")
-
