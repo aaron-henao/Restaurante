@@ -69,7 +69,8 @@ class Restaurante:
                         mesero.horas_trabajadas += horas_turno
                         self.horas_trabajadas += horas_turno
                     else:
-                        horarios[dia].append(mesero.nombre + ": Descanso (Exceso de horas)") #Se asigna un descanso obligatorio a quien esté apunto de complir las 48 hrs semanales
+                        horarios[dia].append(mesero.nombre + ": Descanso (Exceso de horas)") # Se asigna un descanso
+                        # obligatorio a quien esté apunto de complir las 48 hrs semanales
 
             meseros_disponibles = self.meseros.copy()
 
@@ -80,7 +81,8 @@ class Nomina:
     def __init__(self, meseros):
         self.meseros = meseros
 
-    def calcular_salario(self): #Calculamos la nómina del mesero, multiplicando las horas trabajadas por el valor de la hora
+    def calcular_salario(self): # Calculamos la nómina del mesero, multiplicando las horas trabajadas por el valor de
+        # la hora
         valor_hora = 4830
         salarios = {}
         for mesero in self.meseros:
