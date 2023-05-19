@@ -9,6 +9,13 @@ class Mesero:
         self.correo = correo
         self.dias_descanso = 0
         self.horas_trabajadas = 0
+        self.dia_descanso_personalizado = None
+
+    def asignar_descanso_personalizado(self, dia_descanso: str):
+        self.dia_descanso_personalizado = dia_descanso
+
+    def tiene_dia_descanso_personalizado(self, dia: str):
+        return self.dia_descanso_personalizado == dia
 
 
 class Restaurante:
@@ -32,26 +39,30 @@ class Restaurante:
 
         for dia in dias_semana:
             if dia in ["Lunes", "Martes", "Miércoles"]:
-                max_meseros_descanso = 3  # Hasta tres meseros pueden descansar estos días
+                max_meseros_descanso = 3  # Hasta tres meseros pueden tener un día libre durante estos días
             else:
-                max_meseros_descanso = 2  # Dos meseros pueden descansar los demás días
+                max_meseros_descanso = 2  # Dos meseros pueden tener un día libre en los otros días
 
             meseros_descanso = []
-            meseros_cierre = []  # Meseros asignados al turno "12:00 pm - cierre", aquí aseguramos que el restaurante
-            # no va a estar solo en ningun momento
-            turno = random.choice(turnos)
+            meseros_cierre = []  # Meseros asignados al turno "12:00 pm - cierre" para garantizar que el restaurante
+            # nunca quede desatendido
+
+            # Verificar si hay día de descanso personalizado para el mesero
             for mesero in meseros_disponibles:
-                if mesero.dias_descanso < 2 and len(meseros_descanso) < max_meseros_descanso:
+                if mesero.tiene_dia_descanso_personalizado(dia):
                     meseros_descanso.append(mesero)
                     mesero.dias_descanso += 1
-                elif len(meseros_cierre) < 2 and turno == "12:00 pm - cierre":
-                    meseros_cierre.append(mesero)
+
+            # Asignar descanso aleatorio si no se ha asignado uno personalizado
+            if len(meseros_descanso) < max_meseros_descanso:
+                for _ in range(max_meseros_descanso - len(meseros_descanso)):
+                    mesero_descanso = random.choice(meseros_disponibles)
+                    meseros_descanso.append(mesero_descanso)
+                    mesero_descanso.dias_descanso += 1
 
             for mesero in meseros_disponibles:
                 if mesero in meseros_descanso:
                     horarios[dia].append(mesero.nombre + ": Descanso")
-                elif mesero in meseros_cierre:
-                    horarios[dia].append(mesero.nombre + ": 12:00 pm - cierre")
                 else:
                     turno = random.choice(turnos)
                     horas_turno = 0
@@ -69,8 +80,7 @@ class Restaurante:
                         mesero.horas_trabajadas += horas_turno
                         self.horas_trabajadas += horas_turno
                     else:
-                        horarios[dia].append(mesero.nombre + ": Descanso (Exceso de horas)") # Se asigna un descanso
-                        # obligatorio a quien esté apunto de complir las 48 hrs semanales
+                        horarios[dia].append(mesero.nombre + ": Descanso (Exceso de horas)")
 
             meseros_disponibles = self.meseros.copy()
 
@@ -81,8 +91,7 @@ class Nomina:
     def __init__(self, meseros):
         self.meseros = meseros
 
-    def calcular_salario(self): # Calculamos la nómina del mesero, multiplicando las horas trabajadas por el valor de
-        # la hora
+    def calcular_salario(self):
         valor_hora = 4830
         salarios = {}
         for mesero in self.meseros:
@@ -91,7 +100,7 @@ class Nomina:
         return salarios
 
 
-#Ejemplo implementación
+# Implementación de ejemplo
 restaurante = Restaurante()
 
 restaurante.agregar_mesero("Mesero 1", "mesero1@example.com")
@@ -104,6 +113,29 @@ restaurante.agregar_mesero("Mesero 7", "mesero7@example.com")
 restaurante.agregar_mesero("Mesero 8", "mesero8@example.com")
 restaurante.agregar_mesero("Mesero 9", "mesero9@example.com")
 
+# Establecer día de descanso personalizado para un mesero
+print("Ingrese el día de descanso personalizado para el mesero (dejar en blanco si no quiere seleccionar):")
+for mesero in restaurante.meseros:
+    while True:
+        dia_descanso = input(f"{mesero.nombre}: ")
+        if dia_descanso:
+            if dia_descanso not in dias_semana:
+                print("Día no válido. Por favor, seleccione un día de la semana.")
+            elif dia_descanso == "Lunes" or dia_descanso == "Martes" or dia_descanso == "Miércoles":
+                if mesero.dias_descanso < 3:
+                    mesero.asignar_descanso_personalizado(dia_descanso)
+                    break
+                else:
+                    print("Ya se han asignado los descansos máximos para este día. Por favor, seleccione otro día.")
+            else:
+                if mesero.dias_descanso < 2:
+                    mesero.asignar_descanso_personalizado(dia_descanso)
+                    break
+                else:
+                    print("Ya se han asignado los descansos máximos para este día. Por favor, seleccione otro día.")
+        else:
+            break
+
 horarios_semana = restaurante.generar_horarios()
 
 for dia, horarios in horarios_semana.items():
@@ -112,12 +144,10 @@ for dia, horarios in horarios_semana.items():
         print(horario)
     print()
 
-# Mostrar horas laboradas por cada mesero por día y total a la semana
 for mesero in restaurante.meseros:
     print(f"{mesero.nombre} - Horas diarias: {mesero.horas_trabajadas}")
 print(f"Total de horas trabajadas en la semana: {restaurante.horas_trabajadas}")
 
-# Calcular salarios
 nomina = Nomina(restaurante.meseros)
 salarios_meseros = nomina.calcular_salario()
 
