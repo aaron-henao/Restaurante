@@ -14,12 +14,14 @@ class Mesero:
         self.horas_trabajadas = 0
         self.dia_descanso_personalizado = None
 
+    # REQUISITO 2: ASIGNAR DIA DE DESCANSO
     def asignar_descanso_personalizado(self, dia_descanso: str):
         self.dia_descanso_personalizado = dia_descanso
 
     def tiene_dia_descanso_personalizado(self, dia: str):
         return self.dia_descanso_personalizado == dia
 
+    # REQUISITO R6: ENVIAR NOTIFICACIÓN DIARIA
     def enviar_correo(self, dia: str, turno: str):
         mensaje = f"Hola {self.nombre}, tu turno para el día {dia} es: {turno}."
         # Aquí puedes implementar la lógica para enviar el correo al mesero utilizando su dirección de correo electrónico
@@ -29,12 +31,15 @@ class Mesero:
 class Restaurante:
     def _init_(self):
         self.meseros = []
+        # REQUISITO R7: CALCULAR HORAS
         self.horas_trabajadas = 0
-#REQUISITO #1 - AGREGAR MESERO
+
+    # REQUISITO #1 - AGREGAR MESERO
     def agregar_mesero(self, nombre: str, correo: str):
         mesero = Mesero(nombre, correo)
         self.meseros.append(mesero)
 
+    # REQUISITO 3: GENERAR HORARIOS
     def generar_horarios(self):
         turnos = [
             "11:00 am - 18:00 pm",
@@ -97,7 +102,7 @@ class Restaurante:
 
         return horarios
 
-
+#REQUISITO R8: HACER PAGO
 class Nomina:
     def _init_(self, meseros):
         self.meseros = meseros
@@ -202,7 +207,8 @@ generar_horarios_button.pack(side=tk.LEFT, padx=10)
 calcular_salarios_button = ttk.Button(acciones_frame, text="Calcular Salarios", command=calcular_salarios)
 calcular_salarios_button.pack(side=tk.LEFT, padx=10)
 
-mostrar_horas_semanales_button = ttk.Button(acciones_frame, text="Mostrar Horas Semanales", command=mostrar_horas_semanales)
+mostrar_horas_semanales_button = ttk.Button(acciones_frame, text="Mostrar Horas Semanales",
+                                            command=mostrar_horas_semanales)
 mostrar_horas_semanales_button.pack(side=tk.LEFT, padx=10)
 
 # Crear el scrollbar
