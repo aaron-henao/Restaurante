@@ -16,14 +16,6 @@ class ConsolaRestaurante:
     restaurante = Restaurante()
     nomina = Nomina(restaurante.meseros)
 
-    # REQUISITO R5: ENVIAR NOTIFICACIÓN SEMANAL
-    def enviar_correo_(destinatario, contenido):
-        # Lógica para enviar el correo
-        print(f"Enviando correo a: {destinatario}")
-        print("Contenido:")
-        print(contenido)
-        print()
-
     while True:
         mostrar_menu()
         opcion = input("Ingrese el número de la opción que desea ejecutar: ")
@@ -68,7 +60,7 @@ class ConsolaRestaurante:
                 print("Debe haber al menos 8 meseros registrados para generar horarios.")
             else:
                 horarios_semana = restaurante.generar_horarios()
-                #REQUISITO R4: MOSTRAR AGENDA
+
                 for dia, horarios in horarios_semana.items():
                     print(dia)
                     for horario in horarios:
@@ -94,16 +86,6 @@ class ConsolaRestaurante:
                         print(horario)
                     print()
 
-                for mesero in restaurante.meseros:
-                    contenido_correo = f"Estimado {mesero.nombre},\n\nHorario de trabajo para la semana:\n\n"
-                    contenido_correo += f"Día: {dia}\n"
-                    for horario in horarios_semana[dia]:
-                        contenido_correo += f"- {horario}\n"
-                    contenido_correo += "\n¡Gracias y buen trabajo!\n"
-                    enviar_correo(mesero.correo, contenido_correo)
-
-                print("Correos enviados con éxito.")
-                print()
 
         elif opcion == "5":
             salarios_meseros = nomina.calcular_salario()

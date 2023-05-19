@@ -6,7 +6,6 @@ dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", 
 
 
 class Mesero:
-
     def _init_(self, nombre: str, correo: str):
         self.nombre = nombre
         self.correo = correo
@@ -14,14 +13,12 @@ class Mesero:
         self.horas_trabajadas = 0
         self.dia_descanso_personalizado = None
 
-    # REQUISITO 2: ASIGNAR DIA DE DESCANSO
     def asignar_descanso_personalizado(self, dia_descanso: str):
         self.dia_descanso_personalizado = dia_descanso
 
     def tiene_dia_descanso_personalizado(self, dia: str):
         return self.dia_descanso_personalizado == dia
-
-    # REQUISITO R6: ENVIAR NOTIFICACIÓN DIARIA
+#REQUISITO #5 - Notificación diaria
     def enviar_correo(self, dia: str, turno: str):
         mensaje = f"Hola {self.nombre}, tu turno para el día {dia} es: {turno}."
         # Aquí puedes implementar la lógica para enviar el correo al mesero utilizando su dirección de correo electrónico
@@ -31,15 +28,12 @@ class Mesero:
 class Restaurante:
     def _init_(self):
         self.meseros = []
-        # REQUISITO R7: CALCULAR HORAS
         self.horas_trabajadas = 0
-
-    # REQUISITO #1 - AGREGAR MESERO
+#REQUISITO #1 - Agregar mesero
     def agregar_mesero(self, nombre: str, correo: str):
         mesero = Mesero(nombre, correo)
         self.meseros.append(mesero)
-
-    # REQUISITO 3: GENERAR HORARIOS
+#REQUISITO #2 - Generar horarios
     def generar_horarios(self):
         turnos = [
             "11:00 am - 18:00 pm",
@@ -52,21 +46,17 @@ class Restaurante:
 
         for dia in dias_semana:
             if dia in ["Lunes", "Martes", "Miércoles"]:
-                max_meseros_descanso = 3  # Hasta tres meseros pueden tener un día libre durante estos días
+                max_meseros_descanso = 3
             else:
-                max_meseros_descanso = 2  # Dos meseros pueden tener un día libre en los otros días
+                max_meseros_descanso = 2
 
             meseros_descanso = []
-            meseros_cierre = []  # Meseros asignados al turno "12:00 pm - cierre" para garantizar que el restaurante
-            # nunca quede desatendido
-
-            # Verificar si hay día de descanso personalizado para el mesero
+            # REQUISITO #3 - Asignar dias de descanso
             for mesero in meseros_disponibles:
                 if mesero.tiene_dia_descanso_personalizado(dia):
                     meseros_descanso.append(mesero)
                     mesero.dias_descanso += 1
 
-            # Asignar descanso aleatorio si no se ha asignado uno personalizado
             if len(meseros_descanso) < max_meseros_descanso:
                 for _ in range(max_meseros_descanso - len(meseros_descanso)):
                     mesero_descanso = random.choice(meseros_disponibles)
@@ -102,7 +92,7 @@ class Restaurante:
 
         return horarios
 
-#REQUISITO R8: HACER PAGO
+
 class Nomina:
     def _init_(self, meseros):
         self.meseros = meseros
@@ -132,7 +122,7 @@ def generar_horarios():
         for turno in turnos:
             horarios_textbox.insert(tk.END, f"- {turno}\n")
 
-
+#REQUISITO #8 - Hacer pagos
 def calcular_salarios():
     nomina = Nomina(restaurante.meseros)
     salarios = nomina.calcular_salario()
@@ -145,8 +135,20 @@ def mostrar_horas_semanales():
     horas_semanales_textbox.delete(1.0, tk.END)
     horas_semanales_textbox.insert(tk.END, f"Total de horas semanales trabajadas: {restaurante.horas_trabajadas}")
 
+#REQUISITO #9 - Puntaje del código
+def cerrar_programa():
+    puntaje = 0
+    while puntaje < 1 or puntaje > 10:
+        try:
+            puntaje = int(input("Por favor, ingresa un puntaje del 1 al 10 para calificar el código: "))
+        except ValueError:
+            print("Debes ingresar un número entero del 1 al 10.")
 
-# Crear la ventana principal
+    print("¡Gracias por calificar el código!")
+    window.destroy()
+
+
+# REQUISITO #6 - Menu desplegable
 window = tk.Tk()
 window.title("Gestión de Horarios y Nómina")
 window.geometry("600x400")
@@ -178,26 +180,22 @@ agregar_button.grid(row=2, column=0, columnspan=2, pady=10)
 # Crear el frame de visualización de resultados
 resultados_frame = ttk.Frame(main_frame)
 resultados_frame.pack(fill=tk.BOTH, expand=True)
-
-# Crear el cuadro de texto para mostrar los horarios
+#REQUISITO #4 - Mostrar agenda
 horarios_label = ttk.Label(resultados_frame, text="Horarios:")
 horarios_label.grid(row=0, column=0, padx=10, pady=5)
 horarios_textbox = tk.Text(resultados_frame, width=50, height=10)
 horarios_textbox.grid(row=1, column=0, padx=10, pady=5)
 
-# Crear el cuadro de texto para mostrar los salarios
 salarios_label = ttk.Label(resultados_frame, text="Salarios:")
 salarios_label.grid(row=0, column=1, padx=10, pady=5)
 salario_textbox = tk.Text(resultados_frame, width=30, height=10)
 salario_textbox.grid(row=1, column=1, padx=10, pady=5)
-
-# Crear el cuadro de texto para mostrar las horas semanales
+#REQUISITO #7 - Mostrar horas trabajadas
 horas_semanales_label = ttk.Label(resultados_frame, text="Horas Semanales:")
 horas_semanales_label.grid(row=0, column=2, padx=10, pady=5)
 horas_semanales_textbox = tk.Text(resultados_frame, width=20, height=10)
 horas_semanales_textbox.grid(row=1, column=2, padx=10, pady=5)
 
-# Crear los botones de acciones
 acciones_frame = ttk.Frame(main_frame, padding="10")
 acciones_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -207,19 +205,18 @@ generar_horarios_button.pack(side=tk.LEFT, padx=10)
 calcular_salarios_button = ttk.Button(acciones_frame, text="Calcular Salarios", command=calcular_salarios)
 calcular_salarios_button.pack(side=tk.LEFT, padx=10)
 
-mostrar_horas_semanales_button = ttk.Button(acciones_frame, text="Mostrar Horas Semanales",
-                                            command=mostrar_horas_semanales)
+mostrar_horas_semanales_button = ttk.Button(acciones_frame, text="Mostrar Horas Semanales", command=mostrar_horas_semanales)
 mostrar_horas_semanales_button.pack(side=tk.LEFT, padx=10)
 
-# Crear el scrollbar
+cerrar_programa_button = ttk.Button(acciones_frame, text="Cerrar Programa", command=cerrar_programa)
+cerrar_programa_button.pack(side=tk.RIGHT, padx=10)
+
 scrollbar = ttk.Scrollbar(main_frame)
 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-# Asociar el scrollbar a los cuadros de texto
 horarios_textbox.config(yscrollcommand=scrollbar.set)
 salario_textbox.config(yscrollcommand=scrollbar.set)
 horas_semanales_textbox.config(yscrollcommand=scrollbar.set)
 scrollbar.config(command=(horarios_textbox.yview, salario_textbox.yview, horas_semanales_textbox.yview))
 
-# Iniciar el bucle de eventos
 window.mainloop()
