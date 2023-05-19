@@ -1,6 +1,7 @@
 from restaurante.model.restaurante import Restaurante, Nomina
 
 
+
 class ConsolaRestaurante:
     dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
@@ -9,11 +10,19 @@ class ConsolaRestaurante:
         print("1. Agregar mesero")
         print("2. Seleccionar día de descanso para cada mesero")
         print("3. Generar horarios")
-        print("4. Calcular nómina")
-        print("5. Salir")
+        print("4. Enviar horarios por correo a los meseros")
+        print("5. Calcular nómina")
+        print("6. Salir")
 
     restaurante = Restaurante()
     nomina = Nomina(restaurante.meseros)
+
+    def enviar_correo(destinatario, contenido):
+        # Lógica para enviar el correo
+        print(f"Enviando correo a: {destinatario}")
+        print("Contenido:")
+        print(contenido)
+        print()
 
     while True:
         mostrar_menu()
@@ -74,6 +83,29 @@ class ConsolaRestaurante:
                 print()
 
         elif opcion == "4":
+            if len(restaurante.meseros) < 8:
+                print("Debe haber al menos 8 meseros registrados para generar horarios y enviar correos.")
+            else:
+                horarios_semana = restaurante.generar_horarios()
+
+                for dia, horarios in horarios_semana.items():
+                    print(dia)
+                    for horario in horarios:
+                        print(horario)
+                    print()
+
+                for mesero in restaurante.meseros:
+                    contenido_correo = f"Estimado {mesero.nombre},\n\nHorario de trabajo para la semana:\n\n"
+                    contenido_correo += f"Día: {dia}\n"
+                    for horario in horarios_semana[dia]:
+                        contenido_correo += f"- {horario}\n"
+                    contenido_correo += "\n¡Gracias y buen trabajo!\n"
+                    enviar_correo(mesero.correo, contenido_correo)
+
+                print("Correos enviados con éxito.")
+                print()
+
+        elif opcion == "5":
             salarios_meseros = nomina.calcular_salario()
 
             print("Salarios:")
@@ -83,7 +115,7 @@ class ConsolaRestaurante:
             print("Nómina calculada con éxito.")
             print()
 
-        elif opcion == "5":
+        elif opcion == "6":
             print("¡Hasta luego!")
             break
 

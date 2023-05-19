@@ -99,4 +99,3 @@ class Nomina:
             salarios[mesero.nombre] = salario
         return salarios
 
-
