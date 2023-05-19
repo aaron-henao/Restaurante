@@ -1,10 +1,13 @@
+import tkinter as tk
+from tkinter import ttk
 import random
 
 dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
 
 class Mesero:
-    def __init__(self, nombre: str, correo: str):
+
+    def _init_(self, nombre: str, correo: str):
         self.nombre = nombre
         self.correo = correo
         self.dias_descanso = 0
@@ -24,10 +27,10 @@ class Mesero:
 
 
 class Restaurante:
-    def __init__(self):
+    def _init_(self):
         self.meseros = []
         self.horas_trabajadas = 0
-
+#REQUISITO #1 - AGREGAR MESERO
     def agregar_mesero(self, nombre: str, correo: str):
         mesero = Mesero(nombre, correo)
         self.meseros.append(mesero)
@@ -73,14 +76,13 @@ class Restaurante:
                     turno = random.choice(turnos)
                     horas_turno = 0
                     if turno == "11:00 am - 18:00 pm":
-                       horas_turno = 7
+                        horas_turno = 7
                     elif turno == "11:00 am - 15:00 pm - 18:00 pm - cierre":
                         horas_turno = 9
                     elif turno == "12:00 pm - 15:00 pm - 18:00 pm - cierre":
                         horas_turno = 8
                     else:
                         horas_turno = 10
-
 
                     if mesero.horas_trabajadas + horas_turno <= 48:
                         horarios[dia].append(mesero.nombre + " : " + turno)
@@ -97,7 +99,7 @@ class Restaurante:
 
 
 class Nomina:
-    def __init__(self, meseros):
+    def _init_(self, meseros):
         self.meseros = meseros
 
     def calcular_salario(self):
@@ -108,3 +110,110 @@ class Nomina:
             salarios[mesero.nombre] = salario
         return salarios
 
+
+def agregar_mesero():
+    nombre = nombre_entry.get()
+    correo = correo_entry.get()
+    restaurante.agregar_mesero(nombre, correo)
+    nombre_entry.delete(0, tk.END)
+    correo_entry.delete(0, tk.END)
+
+
+def generar_horarios():
+    horarios = restaurante.generar_horarios()
+    horarios_textbox.delete(1.0, tk.END)
+    for dia, turnos in horarios.items():
+        horarios_textbox.insert(tk.END, f"{dia}:\n")
+        for turno in turnos:
+            horarios_textbox.insert(tk.END, f"- {turno}\n")
+
+
+def calcular_salarios():
+    nomina = Nomina(restaurante.meseros)
+    salarios = nomina.calcular_salario()
+    salario_textbox.delete(1.0, tk.END)
+    for mesero, salario in salarios.items():
+        salario_textbox.insert(tk.END, f"{mesero}: ${salario}\n")
+
+
+def mostrar_horas_semanales():
+    horas_semanales_textbox.delete(1.0, tk.END)
+    horas_semanales_textbox.insert(tk.END, f"Total de horas semanales trabajadas: {restaurante.horas_trabajadas}")
+
+
+# Crear la ventana principal
+window = tk.Tk()
+window.title("Gestión de Horarios y Nómina")
+window.geometry("600x400")
+
+# Crear el frame principal
+main_frame = ttk.Frame(window, padding="20")
+main_frame.pack(fill=tk.BOTH, expand=True)
+
+# Crear el frame de entrada de datos
+datos_frame = ttk.Frame(main_frame, padding="10")
+datos_frame.pack(fill=tk.BOTH, expand=True)
+
+# Crear los widgets de entrada de datos
+nombre_label = ttk.Label(datos_frame, text="Nombre:")
+nombre_label.grid(row=0, column=0, sticky=tk.W)
+nombre_entry = ttk.Entry(datos_frame)
+nombre_entry.grid(row=0, column=1)
+
+correo_label = ttk.Label(datos_frame, text="Correo:")
+correo_label.grid(row=1, column=0, sticky=tk.W)
+correo_entry = ttk.Entry(datos_frame)
+correo_entry.grid(row=1, column=1)
+
+restaurante = Restaurante()  # Instancia de la clase Restaurante
+
+agregar_button = ttk.Button(datos_frame, text="Agregar Mesero", command=agregar_mesero)
+agregar_button.grid(row=2, column=0, columnspan=2, pady=10)
+
+# Crear el frame de visualización de resultados
+resultados_frame = ttk.Frame(main_frame)
+resultados_frame.pack(fill=tk.BOTH, expand=True)
+
+# Crear el cuadro de texto para mostrar los horarios
+horarios_label = ttk.Label(resultados_frame, text="Horarios:")
+horarios_label.grid(row=0, column=0, padx=10, pady=5)
+horarios_textbox = tk.Text(resultados_frame, width=50, height=10)
+horarios_textbox.grid(row=1, column=0, padx=10, pady=5)
+
+# Crear el cuadro de texto para mostrar los salarios
+salarios_label = ttk.Label(resultados_frame, text="Salarios:")
+salarios_label.grid(row=0, column=1, padx=10, pady=5)
+salario_textbox = tk.Text(resultados_frame, width=30, height=10)
+salario_textbox.grid(row=1, column=1, padx=10, pady=5)
+
+# Crear el cuadro de texto para mostrar las horas semanales
+horas_semanales_label = ttk.Label(resultados_frame, text="Horas Semanales:")
+horas_semanales_label.grid(row=0, column=2, padx=10, pady=5)
+horas_semanales_textbox = tk.Text(resultados_frame, width=20, height=10)
+horas_semanales_textbox.grid(row=1, column=2, padx=10, pady=5)
+
+# Crear los botones de acciones
+acciones_frame = ttk.Frame(main_frame, padding="10")
+acciones_frame.pack(fill=tk.BOTH, expand=True)
+
+generar_horarios_button = ttk.Button(acciones_frame, text="Generar Horarios", command=generar_horarios)
+generar_horarios_button.pack(side=tk.LEFT, padx=10)
+
+calcular_salarios_button = ttk.Button(acciones_frame, text="Calcular Salarios", command=calcular_salarios)
+calcular_salarios_button.pack(side=tk.LEFT, padx=10)
+
+mostrar_horas_semanales_button = ttk.Button(acciones_frame, text="Mostrar Horas Semanales", command=mostrar_horas_semanales)
+mostrar_horas_semanales_button.pack(side=tk.LEFT, padx=10)
+
+# Crear el scrollbar
+scrollbar = ttk.Scrollbar(main_frame)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+# Asociar el scrollbar a los cuadros de texto
+horarios_textbox.config(yscrollcommand=scrollbar.set)
+salario_textbox.config(yscrollcommand=scrollbar.set)
+horas_semanales_textbox.config(yscrollcommand=scrollbar.set)
+scrollbar.config(command=(horarios_textbox.yview, salario_textbox.yview, horas_semanales_textbox.yview))
+
+# Iniciar el bucle de eventos
+window.mainloop()
