@@ -1,7 +1,6 @@
 from restaurante.model.restaurante import Restaurante, Nomina
 
 
-
 class ConsolaRestaurante:
     dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 

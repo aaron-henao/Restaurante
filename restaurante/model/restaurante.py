@@ -17,6 +17,11 @@ class Mesero:
     def tiene_dia_descanso_personalizado(self, dia: str):
         return self.dia_descanso_personalizado == dia
 
+    def enviar_correo(self, dia: str, turno: str):
+        mensaje = f"Hola {self.nombre}, tu turno para el día {dia} es: {turno}."
+        # Aquí puedes implementar la lógica para enviar el correo al mesero utilizando su dirección de correo electrónico
+        print(f"Enviando correo a {self.correo}: {mensaje}")
+
 
 class Restaurante:
     def __init__(self):
@@ -63,11 +68,12 @@ class Restaurante:
             for mesero in meseros_disponibles:
                 if mesero in meseros_descanso:
                     horarios[dia].append(mesero.nombre + ": Descanso")
+                    mesero.enviar_correo(dia, "Descanso")
                 else:
                     turno = random.choice(turnos)
                     horas_turno = 0
                     if turno == "11:00 am - 18:00 pm":
-                        horas_turno = 7
+                       horas_turno = 7
                     elif turno == "11:00 am - 15:00 pm - 18:00 pm - cierre":
                         horas_turno = 9
                     elif turno == "12:00 pm - 15:00 pm - 18:00 pm - cierre":
@@ -75,12 +81,15 @@ class Restaurante:
                     else:
                         horas_turno = 10
 
+
                     if mesero.horas_trabajadas + horas_turno <= 48:
                         horarios[dia].append(mesero.nombre + " : " + turno)
                         mesero.horas_trabajadas += horas_turno
                         self.horas_trabajadas += horas_turno
+                        mesero.enviar_correo(dia, turno)
                     else:
                         horarios[dia].append(mesero.nombre + ": Descanso (Exceso de horas)")
+                        mesero.enviar_correo(dia, "Descanso (Exceso de horas)")
 
             meseros_disponibles = self.meseros.copy()
 
